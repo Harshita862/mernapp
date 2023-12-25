@@ -4,7 +4,8 @@ const User = require('../models/User.js')
 const { body, validationResult } = require('express-validator');
 const jwt = require("jsonwebtoken");
 const bcrypt =require("bcryptjs");
-const jwtSecret="ThisIsASecretKeyKnownByMeOnlyThatIsTheDeveloper";
+require('dotenv').config();
+
 
 router.post("/createuser",
     [body('email').isEmail(),
@@ -17,7 +18,7 @@ router.post("/createuser",
             return res.status(400).json({ errors: errors.array() });
         }
         else
-        console.log("idhr error derha ")
+        console.log("  error  ")
 
 
 const salt = await bcrypt.genSalt(10);
@@ -64,7 +65,7 @@ const pwdCompare = await bcrypt.compare(req.body.password,userData.password)
                     id:userData.id
                 }
             }
-            const authToken = jwt.sign(data,jwtSecret)//generating Authorisation Token
+            const authToken = jwt.sign(data, process.env.JWT_SECRET);//generating Authorisation Token
             return res.json({ success: true, authToken:authToken});
         }
         catch (error) {
